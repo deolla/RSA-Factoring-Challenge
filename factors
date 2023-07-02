@@ -1,22 +1,25 @@
 #!/usr/bin/python3
 
-from sys import argv
+import sys
 
 def factorize(number):
-    """
-    Factorize a number into a product of two smaller numbers.
-    """
-    p = 2
-    q = number // p
-    print("{}={}*{}".format(number, p, q))
+    for i in range(2, number // 2 + 1):
+        if number % i == 0:
+            return f"{number}={i}*{number//i}"
+    return f"{number} is a prime number"
 
-if len(argv) != 2:
-    exit("Usage: factors <file>")
-
-try:
-    with open(argv[1]) as file:
+def process_file(file_path):
+    with open(file_path, 'r') as file:
         for line in file:
             number = int(line.strip())
-            factorize(number)
-except Exception as e:
-    exit("An error occurred: {}".format(str(e)))
+            result = factorize(number)
+            print(result)
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: factors <file>")
+        sys.exit(1)
+
+    file_path = sys.argv[1]
+    process_file(file_path)
+
