@@ -6,9 +6,13 @@ def factorize(number):
     """
     Factorize a number into a product of two smaller numbers.
     """
-    for m in range(2, number):
-        if number % m == 0:
-            return "{}={}*{}".format(number, m, number // m)
+    p = 2
+    while p * p <= number:
+        if number % p == 0:
+            q = number // p
+            return "{}={}*{}".format(number, p, q)
+        p += 1
+    return "{} is prime".format(number)
 
 if len(argv) != 2:
     exit("Usage: factors <file>")
@@ -16,9 +20,7 @@ if len(argv) != 2:
 try:
     with open(argv[1]) as file:
         for line in file:
-            number = int(line.strip())
-            result = factorize(number)
-            if result:
-                print(result)
+            number = int(line.rstrip())
+            print(factorize(number))
 except Exception as e:
     print("An error occurred:", str(e))
