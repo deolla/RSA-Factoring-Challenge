@@ -1,35 +1,18 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
+from sys import argv
 
-check_factor() {
-    num1=$2
-    num2=$3
-
-    if ((num2 > num1)); then
-        numcp=$num1
-        num1=$num2
-        num2=$numcp
-    fi
-
-    echo "$1=$num1*$num2"
-}
-
-if [ $# -ne 1 ]; then
-    echo 'Usage: rsa <file>'
-    exit 1
-else
-    while read -r i; do
-        number=$i
-        factors=()
-        
-        for ((j=2; j<number; j++)); do
-            if ((number % j == 0)); then
-                factors=("$j" "$((number / j))")
+with open(argv[1]) as f:
+    for line in f:
+        num = int(line)
+        print("{:d}=".format(num), end="")
+        if num % 2 == 0:
+            print("{}*2".format(num//2))
+            continue
+        for i in range(3, num, 2):
+            if num % i == 0:
+                factor = num//i
+                for j in range(3, factor, 2):
+                    if factor % j == 0 or i % j == 0:
+                        break
+                print("{}*{}".format(factor, i))
                 break
-            fi
-        done
-
-        if [ ${#factors[@]} -eq 2 ]; then
-            check_factor "$number" "${factors[@]}"
-        fi
-    done < "$1"
-fi
