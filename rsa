@@ -1,48 +1,35 @@
 #!/usr/bin/env bash
 
-check_factor()
-{
-	if [ $# -ne 3 ];
-        then
-                args=("$@")
-                count=0
-                num2=1
-                for a in ${args[*]};
-                do
-                        if [ $count -gt 1 ];
-                        then
-                                num2=$(echo $a*$num2 | bc)
-                        fi
-                        count=$((count + 1))
-                done
-        else
-                num2=$3
-        fi
+check_factor() {
+    num1=$2
+    num2=$3
 
-        num1=$2
-        num=$(echo "$1" | tr ':' '=')
+    if ((num2 > num1)); then
+        numcp=$num1
+        num1=$num2
+        num2=$numcp
+    fi
 
-        result=$(echo "if($num2 > $num1) 1 else 0" | bc)
-	        if ((result == 1)); then
-		        numcp=$num1
-		        num1=$num2
-		        num2=$numcp
-                fi
-
-        echo "$num$num1*$num2"
+    echo "$1=$num1*$num2"
 }
 
-if [ $# -ne 1 ]
-then
-        echo 'Usage: rsa <file>'
-        exit 1
+if [ $# -ne 1 ]; then
+    echo 'Usage: rsa <file>'
+    exit 1
 else
+    while read -r i; do
+        number=$i
+        factors=()
+        
+        for ((j=2; j<number; j++)); do
+            if ((number % j == 0)); then
+                factors=("$j" "$((number / j))")
+                break
+            fi
+        done
 
-        while read i
-        do
-
-                result=$(factor "$i")
-                check_factor $result
-
-        done < "$1"
+        if [ ${#factors[@]} -eq 2 ]; then
+            check_factor "$number" "${factors[@]}"
+        fi
+    done < "$1"
 fi
