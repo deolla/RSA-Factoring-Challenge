@@ -1,7 +1,15 @@
 #!/usr/bin/python3
+"""
+find these two primes, given only n
+"""
+
 from sys import argv
 
+
 with open(argv[1]) as f:
+    """
+    find these two primes, given only n
+    """
     for line in f:
         num = int(line)
         print("{:d}=".format(num), end="")
